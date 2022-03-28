@@ -124,16 +124,10 @@ export default {
             let curWeek  = this.state.currentWeek;
             this.state.scoreTables[curWeek] = lodash.cloneDeep(this.state.scoreTables[prevWeek]);
 
-
             result = result.data.response;
             result.forEach((match, i) => {
-                if (!this.state.scoreTables[prevWeek][fixture[i][0]] || !this.state.scoreTables[prevWeek][fixture[i][1]]) {
-                    // ignore match with virtual team in case of odd teams count
-                    return;
-                }
                 match.forEach((teamResult, j) => {
                     let team = fixture[i][j];
-                    //this.state.scoreTable[team].played++;
                     if (teamResult === 1) {
                         this.state.scoreTables[curWeek][team].won++;
                     } else if (teamResult === -1) {

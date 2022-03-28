@@ -14,7 +14,18 @@ class FixtureGenerator
             return $this->generateEvenFixtures($teams);
         }
 
-        return $this->generateEvenFixtures($teams + 1);
+        $result = $this->generateEvenFixtures($teams + 1);
+        foreach ($result as $i => $fixture) {
+            foreach ($fixture as $j => $match) {
+                if (in_array($teams, $match)) {
+                    unset($result[$i][$j]);
+                }
+            }
+            // fix array indexes
+            $result[$i] = [...$result[$i]];
+        }
+
+        return $result;
     }
 
     protected function generateEvenFixtures(int $teams): array
@@ -30,7 +41,11 @@ class FixtureGenerator
                     $this->addMatchToFixture($result, $round, [$firstTeam, $secondTeam]);
                 } else {
                     $this->addMatchToFixture($result, $meetingOrder, [$firstTeam, $halfFixturesCount]);
-                    $this->addMatchToFixture($result, $meetingOrder + $halfFixturesCount, [$halfFixturesCount, $firstTeam]);
+                    $this->addMatchToFixture(
+                        $result,
+                        $meetingOrder + $halfFixturesCount,
+                        [$halfFixturesCount, $firstTeam]
+                    );
                 }
             }
         }

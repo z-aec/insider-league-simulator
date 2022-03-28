@@ -3,6 +3,7 @@
 namespace App\Service\PredictorStrategy;
 
 use App\Service\Predictor;
+use JetBrains\PhpStorm\Pure;
 
 class SmallFixturesCountPredictor extends AbstractPredictor implements PredictorInterface
 {
@@ -22,8 +23,8 @@ class SmallFixturesCountPredictor extends AbstractPredictor implements Predictor
             for ($i = max($teamPoints); $i <= max($teamPoints) + $this->maxAvailablePoints($fixturesCount); $i++) {
                 $currentReachProbability = $this->getPointsStrictReachProbability($fixturesCount, $points, $i);
                 // In order to simplify, assume that if more than one team have the same points, they are all winners
-                $otherTeamsNotReachProbability = $this->getOtherTeamsNotReachProbability($fixturesCount, $i + 1, $teamPoints, $team);
-
+                $otherTeamsNotReachProbability =
+                    $this->getOtherTeamsNotReachProbability($fixturesCount, $i + 1, $teamPoints, $team);
 
                 $winProbability+= $currentReachProbability * $otherTeamsNotReachProbability;
             }
@@ -34,8 +35,12 @@ class SmallFixturesCountPredictor extends AbstractPredictor implements Predictor
         return $result;
     }
 
-    private function getOtherTeamsNotReachProbability(int $fixturesCount, int $pointsNeeded, array $teamPoints, int $team)
-    {
+    private function getOtherTeamsNotReachProbability(
+        int $fixturesCount,
+        int $pointsNeeded,
+        array $teamPoints,
+        int $team
+    ): float {
         $result = 1;
 
         foreach ($teamPoints as $otherTeam => $otherTeamPoints) {
@@ -114,7 +119,8 @@ class SmallFixturesCountPredictor extends AbstractPredictor implements Predictor
         return $sum / count($availablePoints);
     }
 
-    private function outOfRange(int $fixturesCount, int $currentPoints, int $pointsNeeded) {
+    private function outOfRange(int $fixturesCount, int $currentPoints, int $pointsNeeded) : bool
+    {
         return $fixturesCount <= 0 || $pointsNeeded > $currentPoints + $this->maxAvailablePoints($fixturesCount);
     }
 }
